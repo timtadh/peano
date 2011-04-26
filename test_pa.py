@@ -45,6 +45,10 @@ def test_PrintNumber():
     assert repr(Implies(Not(Equal(zero, five)), Equal(zero, zero))) == (
       '(implies, (not, (equal, 0, SSSSS0)), (equal, 0, 0))'
     )
+    print repr(Equal(Add(S(0), S(S(0))), S(S(S(0)))))
+    assert repr(Equal(Add(S(0), S(S(0))), S(S(S(0))))) == (
+      '(equal, (add, S0, SS0), SSS0)'
+    )
 
 def test_And():
     zero = Number(0)
@@ -72,4 +76,10 @@ def test_Implies():
     assert Implies(Equal(one, zero), Equal(zero, zero)).value == True
     assert Implies(Equal(one, one), Equal(one, zero)).value == False
     assert Implies(Equal(one, zero), Equal(one, zero)).value == True
+
+def test_Add():
+    zero = Number(0)
+    one = S(zero)
+
+    assert Equal(Add(S(0), S(S(0))), S(S(S(0)))).value 
 

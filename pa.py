@@ -3,6 +3,7 @@
 class Number(object):
     
     def __init__(self, value):
+        self.o = value
         self.value = Number.coerce(value)
     
     @classmethod
@@ -22,7 +23,7 @@ class Number(object):
         return not self == b
 
     def __repr__(self):
-        return repr(self.value)
+        return repr(self.o)
 
     def __int__(self):
         return int(self.value)
@@ -131,4 +132,21 @@ class Implies(object):
     def __repr__(self):
         return '(implies, %s, %s)' % (repr(self.x), repr(self.y))
 
+class Add(object):
+    
+    def __init__(self, x, y):
+        self.x = Number(x)
+        self.y = Number(y)
+
+    @property
+    def value(self):
+        x = self.x.value
+        y = self.y.value
+        while isinstance(y, S):
+            x = S(x)
+            y = y.x.value
+        return x
+    
+    def __repr__(self):
+        return '(add, %s, %s)' % (repr(self.x), repr(self.y))
 
