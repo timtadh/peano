@@ -18,7 +18,7 @@ Clearly we would like any axoim system to settle this in the negative. That is w
 statement to be decided in the negative. To "decide" a question means to know whether or not it is
 derivable. If it is derivable then it "true" and if it not derivable then it is false.
 
-### Deciding all questions
+### Deciding all questions.
 
 For a theory to be complete it must be proven that it can decide all questions. That doesn't mean we
 will have a computerized routine to decide any particular question (for instance 0 = s0) but we have
@@ -38,5 +38,52 @@ Incompleteness theorem. In part I am doing this to prepare for an exam. However,
 is just an interesting thing to do. The practical value is zero, but the educational value I hope to
 be enormous.
 
+The Language
+============
 
+Constants
+
+    0
+
+Functions
+
+    The Unary Function
+      S(x)   abbr Sx
+        semantically it interpreted as +1 or successor
+      Not(x) abbr !x
+    
+    The Binary Functions
+      Add(x, y)     abbr x + y
+      Mul(x, y)     abbr x * y
+      Exp(x, y)     abbr x^y
+      Implies(x, y) abbr x --> y
+      And(x, y)     abbr x & y
+      Or(x, y)      abbr x | y
+
+Relations
+    
+    Equal(x, y)    abbrv x = y    
+    NotEqual(x, y) abbrv x != y
+
+The Peano Axioms
+================
+
+    PA 1 - Sx != 0
+    PA 2 - Sx = Sy --> x = y
+    PA 3 - x + 0 = x
+    PA 4 - x + Sy = S(x + y)
+    PA 5 - x * 0 = 0
+    PA 6 - x * Sy = (x * y) + x
+    PA 7 - x^0 = S0
+    PA 8 - x^Sy = x^y * x
+
+Now for the Rest:
+
+    For any formula F with free variable x there is a formula:
+        (F(0) & ForAll{x}[F(x) --> F(Sx)]) --> ForAll{x}[F(x)]
+
+The Plan
+========
+
+You will be able to write a sentence and the system will evaluate it according to PA.
 
