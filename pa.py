@@ -34,6 +34,7 @@ class Number(object):
 class Boolean(object):
     
     def __init__(self, value):
+        self.o = value
         self.value = Boolean.coerce(value)
     
     @classmethod
@@ -42,6 +43,9 @@ class Boolean(object):
             value = Boolean.coerce(value.value)
         assert value == True or value == False
         return value
+
+    def __repr__(self):
+        return repr(self.o)
 
 
 class S(object):
@@ -65,18 +69,66 @@ class S(object):
 class Not(object):
 
     def __init__(self, x):
-        self.x = Boolean.coerce(x)
+        self.x = Boolean(x)
     @property
     def value(self):
-        return not self.x        
+        return not self.x.value
+
+    def __repr__(self):
+        return "(not, %s)" % repr(self.x.o)
 
 
 class Equal(object):
 
     def __init__(self, x, y):
-        self.x = Number.coerce(x)
-        self.y = Number.coerce(y)
+        self.x = Number(x)
+        self.y = Number(y)
     @property
     def value(self):
         return self.x == self.y
+
+    def __repr__(self):
+        return "(equal, %s, %s)" % (repr(self.x), repr(self.y))
+
+class And(object):
+
+    def __init__(self, x, y):
+        self.x = Boolean(x)
+        self.y = Boolean(y)
+    
+    @property
+    def value(self):
+        return self.x.value and self.y.value
+
+    def __repr__(self):
+        return '(and, %s, %s)' % (repr(self.x), repr(self.y))
+
+
+class Or(object):
+
+    def __init__(self, x, y):
+        self.x = Boolean(x)
+        self.y = Boolean(y)
+    
+    @property
+    def value(self):
+        return self.x.value or self.y.value
+
+    def __repr__(self):
+        return '(or, %s, %s)' % (repr(self.x), repr(self.y))
+
+
+class Implies(object):
+
+    def __init__(self, x, y):
+        self.x = Boolean(x)
+        self.y = Boolean(y)
+    
+    @property
+    def value(self):
+        return (not self.x.value) or self.y.value
+
+    def __repr__(self):
+        return '(implies, %s, %s)' % (repr(self.x), repr(self.y))
+
 
