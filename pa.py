@@ -1,11 +1,11 @@
 
 
 class Number(object):
-    
+
     def __init__(self, value):
         self.o = value
         self.value = Number.coerce(value)
-    
+
     @classmethod
     def coerce(cls, value):
         if hasattr(value, 'value'):
@@ -27,17 +27,17 @@ class Number(object):
 
     def __int__(self):
         return int(self.value)
-    
+
     def __str__(self):
         return str(int(self))
 
 
 class Boolean(object):
-    
+
     def __init__(self, value):
         self.o = value
         self.value = Boolean.coerce(value)
-    
+
     @classmethod
     def coerce(cls, value):
         if hasattr(value, 'value'):
@@ -96,7 +96,7 @@ class And(object):
     def __init__(self, x, y):
         self.x = Boolean(x)
         self.y = Boolean(y)
-    
+
     @property
     def value(self):
         return self.x.value and self.y.value
@@ -110,7 +110,7 @@ class Or(object):
     def __init__(self, x, y):
         self.x = Boolean(x)
         self.y = Boolean(y)
-    
+
     @property
     def value(self):
         return self.x.value or self.y.value
@@ -124,7 +124,7 @@ class Implies(object):
     def __init__(self, x, y):
         self.x = Boolean(x)
         self.y = Boolean(y)
-    
+
     @property
     def value(self):
         return (not self.x.value) or self.y.value
@@ -133,7 +133,7 @@ class Implies(object):
         return '(implies, %s, %s)' % (repr(self.x), repr(self.y))
 
 class Add(object):
-    
+
     def __init__(self, x, y):
         self.x = Number(x)
         self.y = Number(y)
@@ -146,7 +146,58 @@ class Add(object):
             x = S(x)
             y = y.x.value
         return x
-    
+
     def __repr__(self):
         return '(add, %s, %s)' % (repr(self.x), repr(self.y))
+
+class Mul(object):
+
+    def __init__(self, x, y):
+        self.x = Number(x)
+        self.y = Number(y)
+
+    @property
+    def value(self):
+        x = self.x.value
+        y = self.y.value
+        X = 0
+        Y = 0
+        r = Number(0)
+        while isinstance(x, S):
+            X += 1
+            x = x.x.value
+        while isinstance(y, S):
+            Y += 1
+            y = y.x.value
+        for i in xrange(0, Y):
+            for j in xrange(0, X):
+                r = S(r)
+        return r
+
+    def __repr__(self):
+        return '(mul, %s, %s)' % (repr(self.x), repr(self.y))
+
+class Exp(object):
+
+    def __init__(self, x, y):
+        self.x = Number(x)
+        self.y = Number(y)
+
+    @property
+    def value(self):
+        x = self.x.value
+        y = self.y.value
+        X = 0
+        Y = 0
+        r = S(0)
+        while isinstance(y, S):
+            Y += 1
+            y = y.x.value
+        for k in xrange(0, Y):
+            r = Mul(r, x).value
+        return r
+
+    def __repr__(self):
+        return '(exp, %s, %s)' % (repr(self.x), repr(self.y))
+
 
