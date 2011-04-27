@@ -84,11 +84,12 @@ def test_Implies():
 def test_ForAll():
     zero = Constant(0)
     x = Variable('x')
-    assert ForAll('x', Or(Not(Equal(zero, x)), Equal(x, x))).value() == True
-    assert ForAll('x', Equal(Constant(0), Variable('x'))).value() == False
+    assert ForAll(x, Or(Not(Equal(zero, x)), Equal(x, x))).value() == True
+    assert ForAll(x, Equal(Constant(0), Variable('x'))).value() == False
 
 def test_ForSome():
-    assert ForSome('x', Equal(Constant(0), Variable('x'))).value() == True
+    x = Variable('x')
+    assert ForSome(x, Equal(Constant(0), x)).value() == True
 
 def test_Add():
     z = Constant(0)

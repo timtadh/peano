@@ -59,6 +59,8 @@ class Variable(NumericValue):
         super(Variable, self).__init__(name, Number())
     def __repr__(self):
         return '<%s>' % self.val
+    def __repr__(self):
+        return self.val
     def value(self, **objs):
         return objs[self.val]
 
@@ -69,6 +71,8 @@ class Add(NumericBinaryFunction):
         super(Add, self).__init__(x, y, NumericFunction(Number(),Number()))
     def __repr__(self):
         return '(add, %s, %s)' % (repr(self.x), repr(self.y))
+    def __str__(self):
+        return '(%s + %s)' % (str(self.x), str(self.y))
     def value(self, **objs):
         r = Constant(0)
         x = self.x.value(**objs)
@@ -88,6 +92,8 @@ class Mul(NumericBinaryFunction):
         super(Mul, self).__init__(x, y, NumericFunction(Number(),Number()))
     def __repr__(self):
         return '(mul, %s, %s)' % (repr(self.x), repr(self.y))
+    def __str__(self):
+        return '(%s * %s)' % (str(self.x), str(self.y))
     def value(self, **objs):
         r = Constant(0)
         x = self.x.value(**objs)
@@ -104,6 +110,8 @@ class Exp(NumericBinaryFunction):
         super(Exp, self).__init__(x, y, NumericFunction(Number(),Number()))
     def __repr__(self):
         return '(exp, %s, %s)' % (repr(self.x), repr(self.y))
+    def __str__(self):
+        return '(%s^%s)' % (str(self.x), str(self.y))
     def value(self, **objs):
         r = S(Constant(0))
         x = self.x.value(**objs)
@@ -120,6 +128,8 @@ class Equal(BooleanBinaryFunction):
         super(Equal, self).__init__(x, y, BooleanFunction(Number(), Number()))
     def __repr__(self):
         return '(equal, %s, %s)' % (repr(self.x), repr(self.y))
+    def __str__(self):
+        return '(%s = %s)' % (str(self.x), str(self.y))
     def value(self, **objs):
         x = self.x.value(**objs)
         y = self.y.value(**objs)
@@ -139,6 +149,8 @@ class Not(BooleanValue):
         super(Not, self).__init__(val, Boolean())
     def __repr__(self):
         return '(not, %s)' % (repr(self.val))
+    def __str__(self):
+        return '!%s'  % (str(self.val))
     def value(self, **objs):
         return not self.val.value(**objs)
 
@@ -149,6 +161,8 @@ class And(BooleanBinaryFunction):
         super(And, self).__init__(x, y, BooleanFunction(Boolean(), Boolean()))
     def __repr__(self):
         return '(and, %s, %s)' % (repr(self.x), repr(self.y))
+    def __str__(self):
+        return '(%s and %s)' % (str(self.x), str(self.y))
     def value(self, **objs):
         return self.x.value(**objs) and self.y.value(**objs)
 
@@ -159,6 +173,8 @@ class Or(BooleanBinaryFunction):
         super(Or, self).__init__(x, y, BooleanFunction(Boolean(), Boolean()))
     def __repr__(self):
         return '(or, %s, %s)' % (repr(self.x), repr(self.y))
+    def __str__(self):
+        return '(%s or %s)' % (str(self.x), str(self.y))
     def value(self, **objs):
         return self.x.value(**objs) or self.y.value(**objs)
 
@@ -169,37 +185,47 @@ class Implies(BooleanBinaryFunction):
         super(Implies, self).__init__(x, y, BooleanFunction(Boolean(), Boolean()))
     def __repr__(self):
         return '(implies, %s, %s)' % (repr(self.x), repr(self.y))
+    def __str__(self):
+        return '(%s --> %s)' % (str(self.x), str(self.y))
     def value(self, **objs):
         return (not self.x.value(**objs)) or self.y.value(**objs)
 
 class ForAll(BooleanValue):
     def __init__(self, var, formula):
-        assert isinstance(var, basestring)
+        assert isinstance(var, Variable)
         assert isinstance(formula, BooleanValue)
         self.var = var
         self.formula = formula
         super(ForAll, self).__init__(None, BooleanFunction(Boolean()))
     def __repr__(self):
         return '(for all, %s, %s)' % (repr(self.var), repr(self.formula))
+    def __str__(self):
+        return '[All{%s} %s]' % (str(self.var), str(self.formula))
     def value(self, **objs):
         cur = Constant(0)
         for x in xrange(0, MAX):
-            if not self.formula.value(**{self.var:cur}): return False
+            cobjs = dict(objs)
+            cobjs.update({self.var.val:cur})
+            if not self.formula.value(**cobjs): return False
             cur = S(cur)
         return True
 
 class ForSome(BooleanValue):
     def __init__(self, var, formula):
-        assert isinstance(var, basestring)
+        assert isinstance(var, Variable)
         assert isinstance(formula, BooleanValue)
         self.var = var
         self.formula = formula
         super(ForSome, self).__init__(None, BooleanFunction(Boolean()))
     def __repr__(self):
-        return '(for some, %s, %s)' % (repr(self.var), repr(self.formula))
+        return '(for some, %s, %s)' % (repr(self.var.val), repr(self.formula))
+    def __str__(self):
+        return '[Some{%s} %s]' % (str(self.var), str(self.formula))
     def value(self, **objs):
         cur = Constant(0)
         for x in xrange(0, MAX):
-            if self.formula.value(**{self.var:cur}): return True
+            cobjs = dict(objs)
+            cobjs.update({self.var.val:cur})
+            if self.formula.value(**cobjs): return True
             cur = S(cur)
         return False
