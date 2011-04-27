@@ -7,6 +7,8 @@ Z = Constant(0)
 a = Variable('a')
 b = Variable('b')
 c = Variable('c')
+p = Variable('p')
+q = Variable('q')
 x = Variable('x')
 y = Variable('y')
 z = Variable('z')
@@ -42,7 +44,7 @@ prime = Abbrv(
     )
 )
 
-print prime(x=N(5)).replace(prime(x=N(5)))
+#print prime(x=N(5)).replace(prime(x=N(5)))
 
 nextprime = Abbrv(
     And(
@@ -62,5 +64,29 @@ nextprime = Abbrv(
     )
 )
 
-print nextprime()
-print nextprime().value(x=N(13), y=N(17))
+#print nextprime()
+#print nextprime().value(x=N(13), y=N(17))
+
+seq = Abbrv(
+    And(
+        LessThan(S(Z), c),
+        ForAll(q,
+            ForAll(p,
+                Implies(
+                    And(
+                        And(prime(x=p), prime(x=q)),
+                        And(
+                            LessThan(p, q),
+                            Divides(q, c)
+                        )
+                    ),
+                    Divides(p, c)
+                )
+            )
+        )
+    )
+)
+
+print seq()
+for x in xrange(0, 10):
+    print x, seq().value(c=N(x))

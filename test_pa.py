@@ -39,6 +39,13 @@ def test_Equal():
     assert Equal(two_0, two_x).value(x=two_0) == False
     assert Equal(two_0, two_0).value(x=Constant(0)) == True
 
+
+def test_Divides():
+    assert Divides(N(3), N(9)).value() == True
+    assert Divides(N(3), N(10)).value() == False
+    assert Divides(N(5), N(10)).value() == True
+    assert Divides(N(10), N(5)).value() == False
+
 def test_Not():
     zero = Constant(0)
     one = S(zero)

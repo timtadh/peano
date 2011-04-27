@@ -1,5 +1,5 @@
 
-MAX = 20
+MAX = 11
 
 class Type(object): pass
 class Number(Type): pass
@@ -156,6 +156,30 @@ class Equal(BooleanBinaryFunction):
                 return x.val == y.val
         return False
 
+
+class Divides(BooleanBinaryFunction):
+    def __init__(self, x, y):
+        assert isinstance(x, NumericValue)
+        assert isinstance(y, NumericValue)
+        super(Divides, self).__init__(x, y, BooleanFunction(Number(), Number()))
+    def __repr__(self):
+        return '(divies, %s, %s)' % (repr(self.x), repr(self.y))
+    def __str__(self):
+        return '(%s|%s)' % (str(self.x), str(self.y))
+    def value(self, **objs):
+        #print self.x, self.y
+        x = self.x.value(**objs)
+        X = 0
+        y = self.y.value(**objs)
+        Y = 0
+        while isinstance(x, S):
+            X += 1
+            x = x.val
+        while isinstance(y, S):
+            Y += 1
+            y = y.val
+        return Y%X == 0
+
 class LessThan(BooleanBinaryFunction):
     def __init__(self, x, y):
         assert isinstance(x, NumericValue)
@@ -222,7 +246,16 @@ class Implies(BooleanBinaryFunction):
     def __str__(self):
         return '(%s --> %s)' % (str(self.x), str(self.y))
     def value(self, **objs):
-        return (not self.x.value(**objs)) or self.y.value(**objs)
+        x = self.x.value(**objs)
+        y = "don't care"
+        if x == True: y = self.y.value(**objs)
+        #print '------ implies ------'
+        #print objs
+        #print 'X', x
+        #print 'Y', y
+        #print (not x) or y
+        #print '------ implies ------'
+        return (not x) or y
 
 class ForAll(BooleanBinaryFunction):
     def __init__(self, var, formula):
@@ -325,7 +358,7 @@ def Abbrv(formula):
     return abbrv
 
 def N(n):
-    assert n < MAX
+    #assert n < MAX
     cur = Constant(0)
     for x in xrange(0, n):
         cur = S(cur)
