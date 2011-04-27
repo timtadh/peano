@@ -62,6 +62,57 @@ class Variable(NumericValue):
     def value(self, **objs):
         return objs[self.val]
 
+class Add(NumericBinaryFunction):
+    def __init__(self, x, y):
+        assert isinstance(x, NumericValue)
+        assert isinstance(y, NumericValue)
+        super(Add, self).__init__(x, y, NumericFunction(Number(),Number()))
+    def __repr__(self):
+        return '(add, %s, %s)' % (repr(self.x), repr(self.y))
+    def value(self, **objs):
+        r = Constant(0)
+        x = self.x.value(**objs)
+        y = self.y.value(**objs)
+        while isinstance(x, S):
+            r = S(r)
+            x = x.val
+        while isinstance(y, S):
+            r = S(r)
+            y = y.val
+        return r
+
+class Mul(NumericBinaryFunction):
+    def __init__(self, x, y):
+        assert isinstance(x, NumericValue)
+        assert isinstance(y, NumericValue)
+        super(Mul, self).__init__(x, y, NumericFunction(Number(),Number()))
+    def __repr__(self):
+        return '(mul, %s, %s)' % (repr(self.x), repr(self.y))
+    def value(self, **objs):
+        r = Constant(0)
+        x = self.x.value(**objs)
+        y = self.y.value(**objs)
+        while isinstance(y, S):
+            r = Add(r, x).value()
+            y = y.val
+        return r
+
+class Exp(NumericBinaryFunction):
+    def __init__(self, x, y):
+        assert isinstance(x, NumericValue)
+        assert isinstance(y, NumericValue)
+        super(Exp, self).__init__(x, y, NumericFunction(Number(),Number()))
+    def __repr__(self):
+        return '(exp, %s, %s)' % (repr(self.x), repr(self.y))
+    def value(self, **objs):
+        r = S(Constant(0))
+        x = self.x.value(**objs)
+        y = self.y.value(**objs)
+        while isinstance(y, S):
+            r = Mul(r, x).value()
+            y = y.val
+        return r
+
 class Equal(BooleanBinaryFunction):
     def __init__(self, x, y):
         assert isinstance(x, NumericValue)
@@ -97,7 +148,7 @@ class And(BooleanBinaryFunction):
         assert isinstance(y, BooleanValue)
         super(And, self).__init__(x, y, BooleanFunction(Boolean(), Boolean()))
     def __repr__(self):
-        return '(not, %s, %s)' % (repr(self.x), repr(self.y))
+        return '(and, %s, %s)' % (repr(self.x), repr(self.y))
     def value(self, **objs):
         return self.x.value(**objs) and self.y.value(**objs)
 

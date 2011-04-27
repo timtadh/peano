@@ -7,6 +7,15 @@ def test_Print():
     assert repr(five) == 'SSSSS0'
     assert repr(Not(Equal(zero, five))) == '(not, (equal, 0, SSSSS0))'
     assert repr(Not(Not(Equal(zero, five)))) == '(not, (not, (equal, 0, SSSSS0)))'
+    assert repr(And(Not(Equal(zero, five)), Equal(zero, zero))) == (
+      '(and, (not, (equal, 0, SSSSS0)), (equal, 0, 0))'
+    )
+    assert repr(Or(Not(Equal(zero, five)), Equal(zero, zero))) == (
+      '(or, (not, (equal, 0, SSSSS0)), (equal, 0, 0))'
+    )
+    assert repr(Implies(Not(Equal(zero, five)), Equal(zero, zero))) == (
+      '(implies, (not, (equal, 0, SSSSS0)), (equal, 0, 0))'
+    )
 
 def test_S():
     zero = Variable('x')
@@ -80,3 +89,20 @@ def test_ForAll():
 
 def test_ForSome():
     assert ForSome('x', Equal(Constant(0), Variable('x'))).value() == True
+
+def test_Add():
+    z = Constant(0)
+    assert Equal(Add(S(z), S(S(z))), S(S(S(z)))).value() == True
+
+def test_Mul():
+    z = Constant(0)
+    assert Equal(Mul(z, S(S(z))), z).value() == True
+    assert Equal(Mul(S(z), S(z)), S(z)).value() == True
+    assert Equal(Mul(S(S(z)), S(S(z))), S(S(S(S(z))))).value() == True
+    assert Equal(Mul(S(S(S(z))), S(S(z))), S(S(S(S(S(S(z))))))).value() == True
+
+def test_Exp():
+    z = Constant(0)
+    assert Equal(Exp(S(z), S(S(z))), S(z)).value() == True
+    assert Equal(Exp(S(z), z), S(z)).value() == True
+    assert Equal(Exp(S(S(z)), S(S(S(z)))), Mul(S(S(z)), S(S(S(S(z)))))).value() == True
