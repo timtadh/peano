@@ -4,6 +4,9 @@ sys.setrecursionlimit(10000)
 
 Z = Constant(0)
 
+a = Variable('a')
+b = Variable('b')
+c = Variable('c')
 x = Variable('x')
 y = Variable('y')
 z = Variable('z')
@@ -15,22 +18,22 @@ lt = Abbrv(ForSome(r, And(Not(Equal(r, Z)), Equal(Add(r, x), y)))) ## x < y
 le = Abbrv(Or(Equal(x, y), lt()))
 print lt()
 
-gt_one = Abbrv(LessThan(S(Z), y))
+gt_one = Abbrv(LessThan(S(Z), a))
 
 print
-print gt_one(y=x)
-print gt_one(y=x).value(x=N(3))
+print gt_one(a=x)
+print gt_one(a=x).value(x=N(3))
 
 prime = Abbrv(
-    And(gt_one(y=x),
+    And(gt_one(a=x),
         Not(
-            ForSome(y,
-                ForSome(z,
+            ForSome(b,
+                ForSome(c,
                     And(
-                        Equal(x, Mul(y, z)),
+                        Equal(x, Mul(b, c)),
                         And(
-                            gt_one(y=y),
-                            gt_one(y=z)
+                            gt_one(a=b),
+                            gt_one(a=c)
                         )
                     )
                 )
@@ -38,8 +41,26 @@ prime = Abbrv(
         )
     )
 )
-print
-print prime()
-print
-for x in xrange(0, MAX):
-    print x, prime(x=N(x)).value()
+
+print prime(x=N(5)).replace(prime(x=N(5)))
+
+nextprime = Abbrv(
+    And(
+        And(prime(), prime(x=y)),
+        And(
+            LessThan(x, y),
+            ForAll(z,
+                Implies(
+                    prime(x=z),
+                    Or(
+                        Or(Equal(z, x), LessThan(z, x)),
+                        Or(Equal(y, z), LessThan(y, z))
+                    )
+                )
+            )
+        )
+    )
+)
+
+print nextprime()
+print nextprime().value(x=N(13), y=N(17))

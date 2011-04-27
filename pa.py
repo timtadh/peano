@@ -325,6 +325,7 @@ def Abbrv(formula):
     return abbrv
 
 def N(n):
+    assert n < MAX
     cur = Constant(0)
     for x in xrange(0, n):
         cur = S(cur)
