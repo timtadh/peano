@@ -107,3 +107,35 @@ def test_Exp():
     assert Equal(Exp(S(z), S(S(z))), S(z)).value() == True
     assert Equal(Exp(S(z), z), S(z)).value() == True
     assert Equal(Exp(S(S(z)), S(S(S(z)))), Mul(S(S(z)), S(S(S(S(z)))))).value() == True
+
+def test_Sub():
+    Z = Constant(0)
+    r = Variable('r')
+    x = Variable('x')
+    y = Variable('y')
+
+    assert repr(Sub(x, y, S(x)).value(y=Z)) == 'S0'
+    assert repr(Sub(x, y, S(S(x))).value(y=Z)) == 'SS0'
+    two = Abbrv(S(S(x)))
+    assert repr(two(x=y).value(y=Z)) == 'SS0'
+
+    print
+    two_0 = two(x=Z)
+    print two()
+    print
+    print two_0
+    print two_0.value()
+    print
+    f = Abbrv(Equal(two_0, x))
+    print
+    assert f(x=S(S(x))).value(x=Z) == True
+
+    print
+    print '--'
+
+    lt = Abbrv(ForSome(r, And(Not(Equal(r, Z)), Equal(Add(r, x), y))))
+    gt_one = Abbrv(Abbrv(lt(x=S(Z)))(y=x))
+    assert gt_one().value(x=S(S(Z))) == True
+
+if __name__ == '__main__':
+    test_Print()
