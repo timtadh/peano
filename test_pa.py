@@ -1,4 +1,4 @@
-from pa2 import *
+from pa import *
 
 def test_Print():
     zero = Constant(0)
