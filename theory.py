@@ -7,6 +7,10 @@ Z = Constant(0)
 a = Variable('a')
 b = Variable('b')
 c = Variable('c')
+d = Variable('d')
+e = Variable('e')
+f = Variable('f')
+g = Variable('g')
 p = Variable('p')
 q = Variable('q')
 x = Variable('x')
@@ -25,6 +29,8 @@ gt_one = Abbrv(LessThan(S(Z), a))
 print
 print gt_one(a=x)
 print gt_one(a=x).value(x=N(3))
+print
+print
 
 prime = Abbrv(
     And(gt_one(a=x),
@@ -87,6 +93,35 @@ seq = Abbrv(
     )
 )
 
-print seq()
-for x in xrange(0, 10):
-    print x, seq().value(c=N(x))
+#print seq()
+#for x in xrange(0, 10):
+    #print x, seq().value(c=N(x))
+
+
+products = Abbrv(
+    And(
+        And(
+            And(Divides(N(2),d), Not(Divides(N(4),d))),
+            seq(c=d),
+        ),
+        ForAll(e,
+            ForAll(f,
+                ForAll(g,
+                    Implies(
+                        And(nextprime(x=f, y=g), Divides(g, d)),
+                        Bijection(
+                            Divides(Exp(f, e), d),
+                            Divides(Exp(g, S(e)), d),
+                        ),
+                    )
+                )
+            )
+        )
+    )
+)
+
+print products()
+for x in xrange(0, MAX):
+    print x, products().value(d=N(x))
+
+

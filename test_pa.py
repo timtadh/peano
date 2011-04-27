@@ -88,6 +88,17 @@ def test_Implies():
     assert Implies(false, true).value() == True
     assert Implies(false, false).value() == True
 
+def test_Bijection():
+    zero = Constant(0)
+    one = S(zero)
+    two = S(S(zero))
+    true = Equal(one, one)
+    false = Equal(one, two)
+    assert Bijection(true, true).value() == True
+    assert Bijection(true, false).value() == False
+    assert Bijection(false, true).value() == False
+    assert Bijection(false, false).value() == True
+
 def test_ForAll():
     zero = Constant(0)
     x = Variable('x')

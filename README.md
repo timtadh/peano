@@ -24,11 +24,11 @@ For a theory to be complete it must be proven that it can decide all questions. 
 will have a computerized routine to decide any particular question (for instance 0 = s0) but we have
 the assurance that indeed it can be decided. Unfortunately, Kurt G\:{o}del showed us the previous
 century that if we finitely axiomitize our theory (that is only write down a finite set of
-potentially recursive axoims) we will never decide all questions. 
+potentially recursive axoims) we will never decide all questions.
 
 Although Peano Arithmetic cannot decide all questions it can decide almost every interesting
 question you might have. For instance it can decide whether a particular sentence is a theorem of
-Peano Arithmetic. 
+Peano Arithmetic.
 
 Purpose of this Repository
 ==========================
@@ -51,7 +51,7 @@ Functions
       S(x)   abbr Sx
         semantically it interpreted as +1 or successor
       Not(x) abbr !x
-    
+
     The Binary Functions
       Add(x, y)     abbr x + y
       Mul(x, y)     abbr x * y
@@ -61,8 +61,8 @@ Functions
       Or(x, y)      abbr x | y
 
 Relations
-    
-    Equal(x, y)    abbrv x = y    
+
+    Equal(x, y)    abbrv x = y
     NotEqual(x, y) abbrv x != y
 
 The Peano Axioms
@@ -82,8 +82,36 @@ Now for the Rest:
     For any formula F with free variable x there is a formula:
         (F(0) & ForAll{x}[F(x) --> F(Sx)]) --> ForAll{x}[F(x)]
 
-The Plan
-========
+Status
+======
 
-You will be able to write a sentence and the system will evaluate it according to PA.
+You can define and evaluate PA in a limited way. Unquantified PA works fine, but quantifiers cause
+some issues. This is to be expected as they are saying very general things and a computer can really
+only say specific things. There may be more clever ways to implement quantifiers but for now they
+are slow, and only marginally useful. However, we can still encode interesting things like:
+
+    prime = Abbrv(
+        And(
+            LessThan(S(0), x),
+            Not(
+                ForSome(b,
+                    ForSome(c,
+                        And(
+                            Equal(x, Mul(b, c)),
+                            And(
+                                LessThan(S(0), b),
+                                LessThan(S(0), c)
+                            )
+                        )
+                    )
+                )
+            )
+        )
+    )
+
+Just note that formulas such as this one may take a very, very long time to evaluate in the general
+case.
+
+The "Peano on Python" one day experiment was a success, but not a particularly useful one. It was
+however very educational and helped me understand the Incompleteness Theorem more fully.
 

@@ -1,5 +1,5 @@
 
-MAX = 11
+MAX = 8
 
 class Type(object): pass
 class Number(Type): pass
@@ -256,6 +256,20 @@ class Implies(BooleanBinaryFunction):
         #print (not x) or y
         #print '------ implies ------'
         return (not x) or y
+
+class Bijection(BooleanBinaryFunction):
+    def __init__(self, x, y):
+        assert isinstance(x, BooleanValue)
+        assert isinstance(y, BooleanValue)
+        super(Bijection, self).__init__(x, y, BooleanFunction(Boolean(), Boolean()))
+    def __repr__(self):
+        return '(bijection, %s, %s)' % (repr(self.x), repr(self.y))
+    def __str__(self):
+        return '(%s <--> %s)' % (str(self.x), str(self.y))
+    def value(self, **objs):
+        x = self.x.value(**objs)
+        y = self.y.value(**objs)
+        return (x and y) or ((not x) and (not y))
 
 class ForAll(BooleanBinaryFunction):
     def __init__(self, var, formula):
