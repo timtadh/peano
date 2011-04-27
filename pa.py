@@ -31,7 +31,6 @@ class Number(object):
     def __str__(self):
         return str(int(self))
 
-
 class Boolean(object):
 
     def __init__(self, value):
@@ -199,5 +198,4 @@ class Exp(object):
 
     def __repr__(self):
         return '(exp, %s, %s)' % (repr(self.x), repr(self.y))
-
 
