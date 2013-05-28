@@ -2,7 +2,7 @@ Peano Arithmetic
 ================
 
 Peano Arithmetic is a small set of axioms which recursively define most of the truths of arithmetic.
-They cannot define all of the truths do to G\:{o}del's Incompleteness Theorem, which states no
+They cannot define all of the truths due to Gödel's Incompleteness Theorem, which states no
 recursively axiomatized theory can settle all questions.
 
 ### To a settle a question.
